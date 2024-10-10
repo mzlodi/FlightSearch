@@ -1,0 +1,27 @@
+# Ignore build output
+bin/
+obj/
+
+# Ignore user secrets
+**/secrets.json
+**/appsettings.Development.json
+
+# Ignore environment variable files
+.env
+
+# Ignore Visual Studio files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore Rider files
+.idea/
+
+# Ignore NuGet Packages
+*.nupkg
+packages/
+
+# Ignore temporary files
+*.tmp
+*.log

@@ -1,0 +1,15 @@
+.flights-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.flights-table th,
+.flights-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.flights-table th {
+    background-color: #f2f2f2;
+}
