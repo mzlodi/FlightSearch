@@ -3,6 +3,7 @@ import FlightSearchForm from '../components/FlightSearchForm';
 import FlightTable from '../components/FlightTable';
 import { FlightSearchFilters } from '../interfaces/FlightSearchFilters';
 import { useFlightOffers } from '../hooks/useApi';
+import { FlightOffer } from '../interfaces/FlightOffer';
 import '../styles/FlightSearchPage.css';
 
 const FlightSearchPage: React.FC = () => {
@@ -16,12 +17,17 @@ const FlightSearchPage: React.FC = () => {
     });
 
     const [triggerSearch, setTriggerSearch] = useState(false);
+    const [flightOffers, setFlightOffers] = useState<FlightOffer[]>([]);
 
-    const { flightOffers, loading, error } = useFlightOffers(searchParams, triggerSearch);
+    const { loading, error } = useFlightOffers(searchParams, triggerSearch, setFlightOffers);
 
     const handleSearch = (filters: FlightSearchFilters) => {
+        const paramsChanged = JSON.stringify(filters) !== JSON.stringify(searchParams);
         setSearchParams(filters);
         setTriggerSearch(true);
+        if (paramsChanged) {
+            setFlightOffers([]);
+        }
     };
 
     return (
@@ -30,7 +36,7 @@ const FlightSearchPage: React.FC = () => {
             <FlightSearchForm onSearch={handleSearch} />
             {loading && <p className="loading">Loading flights...</p>}
             {error && <p className="error-message">{error}</p>}
-            {flightOffers.length > 0 && <FlightTable flights={flightOffers} />}
+            {!loading && flightOffers.length > 0 && <FlightTable flights={flightOffers} />}
         </div>
     );
 };

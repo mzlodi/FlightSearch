@@ -13,3 +13,33 @@
 .flights-table th {
     background-color: #f2f2f2;
 }
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow-button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.arrow-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.arrow-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.page-info {
+    font-weight: bold;
+}

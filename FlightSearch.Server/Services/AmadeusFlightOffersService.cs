@@ -32,7 +32,7 @@ namespace FlightSearch.Server.Services
                 queryBuilder.Append($"&returnDate={returnDate}");
             }
 
-            queryBuilder.Append($"&adults={passengers}&currencyCode={currency}&max=10");
+            queryBuilder.Append($"&adults={passengers}&currencyCode={currency}&max=250");
 
             var requestUrl = _config.ApiUrl + queryBuilder.ToString();
 

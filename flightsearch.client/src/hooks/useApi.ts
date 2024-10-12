@@ -14,8 +14,9 @@ export const useFlightOffers = (params: {
     passengers: number;
     currency: string;
 },
-    triggerSearch: boolean) => {
-    const [flightOffers, setFlightOffers] = useState<FlightOffer[]>([]);
+    triggerSearch: boolean,
+    setFlightOffers: React.Dispatch<React.SetStateAction<FlightOffer[]>>
+) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +50,7 @@ export const useFlightOffers = (params: {
         };
 
         fetchData();
-    }, [params, triggerSearch]);
+    }, [params, triggerSearch, setFlightOffers]);
 
-    return { flightOffers, loading, error };
+    return { loading, error };
 };

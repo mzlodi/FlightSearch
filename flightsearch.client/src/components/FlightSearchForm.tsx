@@ -19,9 +19,21 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
-        setFormData({
-            ...formData,
-            [name]: name === 'passengers' ? Number(value) : value
+        setFormData((prevFormData) => {
+            const updatedFormData = {
+                ...prevFormData,
+                [name]: name === 'passengers' ? Number(value) : value
+            };
+
+            if (name === 'departureDate' && updatedFormData.returnDate && updatedFormData.returnDate < value) {
+                updatedFormData.returnDate = value;
+            }
+
+            if (name === 'returnDate' && updatedFormData.departureDate && updatedFormData.departureDate > value) {
+                updatedFormData.departureDate = value;
+            }
+
+            return updatedFormData;
         });
     };
 
@@ -29,6 +41,8 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
         e.preventDefault();
         onSearch(formData);
     };
+
+    const today = new Date().toISOString().split('T')[0];
 
     return (
         <form onSubmit={handleSubmit}>
@@ -41,11 +55,11 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
             </label>
 
             <label>Departure Date:
-                <input type="date" name="departureDate" value={formData.departureDate} onChange={handleInputChange} required />
+                <input type="date" name="departureDate" value={formData.departureDate} onChange={handleInputChange} required min={today} />
             </label>
 
             <label>Return Date:
-                <input type="date" name="returnDate" value={formData.returnDate} onChange={handleInputChange} />
+                <input type="date" name="returnDate" value={formData.returnDate} onChange={handleInputChange} min={formData.departureDate || today} />
             </label>
 
             <label>Passengers:
