@@ -28,9 +28,7 @@ export const useFlightOffers = (params: {
             setError(null);
             try {
                 const response = await api.api.searchList(params);
-                console.log(response);
                 const responseBody = await response.json();
-                console.log("Response Body:", responseBody);
 
                 const data: FlightOffer[] = responseBody as FlightOffer[];
 

@@ -22,7 +22,7 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
         setFormData((prevFormData) => {
             const updatedFormData = {
                 ...prevFormData,
-                [name]: name === 'passengers' ? Number(value) : value
+                [name]: name === 'passengers' ? Number(value) : (name === 'origin' || name === 'destination') ? value.toUpperCase() : value
             };
 
             if (name === 'departureDate' && updatedFormData.returnDate && updatedFormData.returnDate < value) {

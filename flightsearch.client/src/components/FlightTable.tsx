@@ -30,6 +30,26 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
         }
     };
 
+    const handleFirstPage = () => {
+        setCurrentPage(1);
+    };
+
+    const handleLastPage = () => {
+        setCurrentPage(totalPages);
+    };
+
+    const formatDate = (dateString: string | null | undefined) => {
+        if (!dateString) return 'N/A';
+        const options: Intl.DateTimeFormatOptions = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        return new Date(dateString).toLocaleString('en-GB', options);
+    };
+
     return (
         <div>
             <table className="flights-table">
@@ -50,8 +70,8 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
                         <tr key={flight.id}>
                             <td>{flight.origin}</td>
                             <td>{flight.destination}</td>
-                            <td>{flight.departureDate}</td>
-                            <td>{flight.returnDate}</td>
+                            <td>{formatDate(flight.departureDate)}</td>
+                            <td>{formatDate(flight.returnDate)}</td>
                             <td>{flight.numberOfStopovers}</td>
                             <td>{flight.numberOfPassengers}</td>
                             <td>{flight.currency}</td>
@@ -62,6 +82,13 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
             </table>
 
             <div className="pagination">
+                <button
+                    onClick={handleFirstPage}
+                    disabled={currentPage === 1}
+                    className="arrow-button"
+                >
+                    First Page
+                </button>
                 <button
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
@@ -78,6 +105,13 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
                     className="arrow-button"
                 >
                     Next &gt;
+                </button>
+                <button
+                    onClick={handleLastPage}
+                    disabled={currentPage === totalPages}
+                    className="arrow-button"
+                >
+                    Last Page
                 </button>
             </div>
         </div>
