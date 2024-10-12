@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import FlightSearchForm from '../components/FlightSearchForm';
 import FlightTable from '../components/FlightTable';
-import { Flight } from '../interfaces/Flight';
 import { FlightSearchFilters } from '../interfaces/FlightSearchFilters';
-import { FlightService } from '../services/FlightService';
+import { useFlightOffers } from '../hooks/useApi';
 import '../styles/FlightSearchPage.css';
 
 const FlightSearchPage: React.FC = () => {
-    const [flights, setFlights] = useState<Flight[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [searchParams, setSearchParams] = useState<FlightSearchFilters>({
+        origin: '',
+        destination: '',
+        departureDate: '',
+        returnDate: '',
+        passengers: 1,
+        currency: 'EUR',
+    });
 
-    const handleSearch = async (searchFilters: FlightSearchFilters) => {
-        setLoading(true);
-        setError(null);
+    const [triggerSearch, setTriggerSearch] = useState(false);
 
-        try {
-            const fetchedFlights = await FlightService.searchFlights(searchFilters);
-            setFlights(fetchedFlights);
-        } catch (error) {
-            setError('Error fetching flights: ' + error);
-        } finally {
-            setLoading(false);
-        }
+    const { flightOffers, loading, error } = useFlightOffers(searchParams, triggerSearch);
+
+    const handleSearch = (filters: FlightSearchFilters) => {
+        setSearchParams(filters);
+        setTriggerSearch(true);
     };
 
     return (
@@ -31,7 +30,7 @@ const FlightSearchPage: React.FC = () => {
             <FlightSearchForm onSearch={handleSearch} />
             {loading && <p className="loading">Loading flights...</p>}
             {error && <p className="error-message">{error}</p>}
-            {flights.length > 0 && <FlightTable flights={flights} />}
+            {flightOffers.length > 0 && <FlightTable flights={flightOffers} />}
         </div>
     );
 };

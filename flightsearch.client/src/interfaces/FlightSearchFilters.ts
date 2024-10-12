@@ -1,6 +1,6 @@
 export interface FlightSearchFilters {
-    originAirport: string;
-    destinationAirport: string;
+    origin: string;
+    destination: string;
     departureDate: string;
     returnDate?: string;
     passengers: number;

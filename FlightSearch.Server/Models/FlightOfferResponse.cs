@@ -7,6 +7,7 @@
 
     public class FlightOfferData
     {
+        public bool OneWay { get; set; }
         public List<Itinerary> Itineraries { get; set; }
         public Price Price { get; set; }
         public List<TravelerPricing> TravelerPricings { get; set; }

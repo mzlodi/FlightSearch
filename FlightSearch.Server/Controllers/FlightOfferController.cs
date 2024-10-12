@@ -1,7 +1,7 @@
 ﻿using FlightSearch.Server.Interfaces;
 using FlightSearch.Server.Models;
-using FlightSearch.Server.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace FlightSearch.Server.Controllers
 {
@@ -18,8 +18,15 @@ namespace FlightSearch.Server.Controllers
             _flightOffersService = flightOffersService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFlightOffers(string origin, string destination, string departureDate, string? returnDate, int passengers, Currency currency)
+        [HttpGet("search")]
+        public async Task<IActionResult> GetFlightOffers(
+            [FromQuery, Required] string origin,
+            [FromQuery, Required] string destination,
+            [FromQuery, Required] string departureDate,
+            [FromQuery] string? returnDate,
+            [FromQuery, Required, Range(1, 9)] int passengers,
+            [FromQuery, Required] string currency
+            )
         {
             try
             {

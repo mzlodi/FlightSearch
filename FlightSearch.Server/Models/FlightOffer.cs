@@ -1,6 +1,4 @@
-﻿using FlightSearch.Server.Models.Enums;
-
-namespace FlightSearch.Server.Models
+﻿namespace FlightSearch.Server.Models
 {
     public class FlightOffer
     {
@@ -10,7 +8,7 @@ namespace FlightSearch.Server.Models
         public DateTime? ReturnDate { get; set; }
         public int NumberOfStopovers { get; set; }
         public int NumberOfPassengers { get; set; }
-        public Currency Currency { get; set; }
+        public string Currency { get; set; }
         public decimal TotalPrice { get; set; }
     }
 }

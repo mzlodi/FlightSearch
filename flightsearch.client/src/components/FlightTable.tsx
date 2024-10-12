@@ -1,9 +1,9 @@
 import React from 'react';
-import { Flight } from '../interfaces/Flight';
+import { FlightOffer } from '../interfaces/FlightOffer';
 import '../styles/FlightTable.css';
 
 interface FlightTableProps {
-    flights: Flight[];
+    flights: FlightOffer[];
 }
 
 const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
@@ -17,7 +17,8 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
                 <tr>
                     <th>Origin Airport</th>
                     <th>Destination Airport</th>
-                    <th>Date</th>
+                    <th>Departure Date</th>
+                    <th>Return Date</th>
                     <th>Stopovers</th>
                     <th>Passengers</th>
                     <th>Currency</th>
@@ -27,11 +28,12 @@ const FlightTable: React.FC<FlightTableProps> = ({ flights }) => {
             <tbody>
                 {flights.map(flight => (
                     <tr key={flight.id}>
-                        <td>{flight.originAirport}</td>
-                        <td>{flight.destinationAirport}</td>
-                        <td>{flight.date}</td>
-                        <td>{flight.stopovers}</td>
-                        <td>{flight.passengers}</td>
+                        <td>{flight.origin}</td>
+                        <td>{flight.destination}</td>
+                        <td>{flight.departureDate}</td>
+                        <td>{flight.returnDate}</td>
+                        <td>{flight.numberOfStopovers}</td>
+                        <td>{flight.numberOfPassengers}</td>
                         <td>{flight.currency}</td>
                         <td>{flight.totalPrice}</td>
                     </tr>

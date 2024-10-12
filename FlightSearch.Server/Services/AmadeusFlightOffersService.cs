@@ -1,7 +1,6 @@
 ﻿using FlightSearch.Server.Configurations;
 using FlightSearch.Server.Interfaces;
 using FlightSearch.Server.Models;
-using FlightSearch.Server.Models.Enums;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
@@ -21,7 +20,7 @@ namespace FlightSearch.Server.Services
             _config = config.Value;
         }
 
-        public async Task<List<FlightOffer>> GetFlightOffersAsync(string origin, string destination, string departureDate, string? returnDate, int passengers, Currency currency)
+        public async Task<List<FlightOffer>> GetFlightOffersAsync(string origin, string destination, string departureDate, string? returnDate, int passengers, string currency)
         {
             var accessToken = await _authService.GetAuthTokenAsync();
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(accessToken.TokenType, accessToken.AccessToken);
@@ -33,7 +32,7 @@ namespace FlightSearch.Server.Services
                 queryBuilder.Append($"&returnDate={returnDate}");
             }
 
-            queryBuilder.Append($"&adults={passengers}&currencyCode={currency}&max=1");
+            queryBuilder.Append($"&adults={passengers}&currencyCode={currency}&max=10");
 
             var requestUrl = _config.ApiUrl + queryBuilder.ToString();
 
@@ -42,29 +41,29 @@ namespace FlightSearch.Server.Services
 
             var contentString = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(contentString);
-
             var flightOfferResponse = JsonSerializer.Deserialize<FlightOfferResponse>(contentString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
 
-            return flightOfferResponse?.Data?.Select(MapToFlightOffer).ToList() ?? new List<FlightOffer>();
+            var flights = flightOfferResponse?.Data?.Select(MapToFlightOffer).ToList() ?? new List<FlightOffer>();
+
+            return flights;
         }
 
-        private FlightOffer MapToFlightOffer(dynamic flightData) {
-            var firstItinerary = flightData.Itineraries[0];
-            var firstSegment = firstItinerary?.Segments[0];
+        private FlightOffer MapToFlightOffer(FlightOfferData flightData) {
+            var firstItinerary = flightData.Itineraries.FirstOrDefault();
+            var segments = firstItinerary?.Segments;
 
             return new FlightOffer
             {
-                Origin = firstSegment?.Departure.IataCode,
-                Destination = firstSegment?.Arrival.IataCode,
-                DepartureDate = firstSegment?.Departure.At,
-                ReturnDate = firstSegment?.Arrival.At,
-                NumberOfStopovers = firstSegment?.NumberOfStops ?? 0,
+                Origin = segments.First().Departure.IataCode,
+                Destination = segments.Last().Arrival.IataCode,
+                DepartureDate = segments.First().Departure.At,
+                ReturnDate = flightData.Itineraries.Count > 1 ? flightData.Itineraries.Last().Segments.First().Departure.At : null,
+                NumberOfStopovers = segments.Count - 1,
                 NumberOfPassengers = flightData.TravelerPricings.Count,
-                Currency = (Currency)Enum.Parse(typeof(Currency), flightData.Price.Currency),
+                Currency = flightData.Price.Currency,
                 TotalPrice = decimal.Parse(flightData.Price.Total)
             };
         }

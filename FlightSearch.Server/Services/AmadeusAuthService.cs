@@ -32,8 +32,8 @@ namespace FlightSearch.Server.Services
             var responseBody = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseBody);
 
-            var token_type = jsonResponse["token_type"].ToString();
-            var access_token = jsonResponse["access_token"].ToString();
+            var token_type = jsonResponse["token_type"]!.ToString();
+            var access_token = jsonResponse["access_token"]!.ToString();
 
             return new AuthToken(token_type, access_token);
         }
